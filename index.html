@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Anaesthetise...</title>
+<style>
+  :root{
+    --pink:#ffc8dd; --pink2:#ffafcc; --blue:#bde0fe; --blue2:#a2d2ff;
+    --mint:#c7f9cc; --lilac:#cdb4db; --butter:#fff1b8; --peach:#ffd6a5;
+    --ink:#4a4063; --card:#ffffffd9;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; color:var(--ink);
+    font-family:"Comic Sans MS","Chalkboard SE","Marker Felt","Trebuchet MS",system-ui,sans-serif;
+    background:linear-gradient(135deg,var(--pink),var(--blue),var(--mint),var(--butter));
+    background-size:300% 300%; animation:bg 18s ease infinite;
+    min-height:100vh;
+  }
+  @keyframes bg{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .wrap{max-width:720px;margin:0 auto;padding:20px 16px 120px}
+  header{text-align:center;padding:28px 8px 8px}
+  h1{
+    margin:0;font-size:clamp(2rem,8vw,3.4rem);line-height:1.05;
+    background:linear-gradient(90deg,#ff7eb6,#8f9bff,#5ed3c1);-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(2px 3px 0 #fff);
+  }
+  .sub{margin:8px 0 0;font-size:1rem;opacity:.8}
+  .floaty{display:inline-block;animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-8px) rotate(6deg)}}
+
+  .progress{
+    position:sticky;top:8px;z-index:5;margin:16px 0;padding:10px 14px;
+    background:var(--card);border-radius:999px;border:3px solid #fff;
+    box-shadow:0 6px 0 #ffffff88;backdrop-filter:blur(6px);
+    display:flex;align-items:center;gap:10px;font-size:.85rem
+  }
+  .bar{flex:1;height:12px;border-radius:99px;background:#fff;overflow:hidden;border:2px solid var(--lilac)}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink2),var(--blue2));transition:width .4s}
+
+  .card{
+    background:var(--card);border:3px solid #fff;border-radius:26px;
+    padding:18px 18px 20px;margin:18px 0;
+    box-shadow:0 8px 0 #ffffff88, 0 14px 30px #7a6aa622;
+    transition:transform .2s;
+  }
+  .card:hover{transform:rotate(-.4deg) translateY(-2px)}
+  .card.done{border-color:var(--mint)}
+  .card h2{margin:0 0 4px;font-size:1.25rem;display:flex;gap:10px;align-items:center}
+  .num{
+    display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;
+    background:var(--c,var(--pink));font-size:.95rem;border:3px solid #fff;flex:none
+  }
+  .hint{margin:0 0 12px;font-size:.82rem;opacity:.7;font-style:italic}
+  .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+  label{display:block;font-size:.8rem;margin-bottom:4px;opacity:.85}
+  input[type=text],input[type=number],select,textarea{
+    width:100%;padding:11px 12px;border-radius:16px;border:3px solid var(--blue);
+    background:#fff;color:var(--ink);font:inherit;font-size:.95rem;outline:none;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--pink2);box-shadow:0 0 0 4px #ffafcc44}
+  textarea{resize:vertical;min-height:60px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .chip{
+    cursor:pointer;user-select:none;padding:8px 13px;border-radius:999px;
+    background:#fff;border:3px solid var(--lilac);font-size:.85rem;transition:.15s;
+  }
+  .chip:hover{transform:scale(1.06) rotate(-2deg)}
+  .chip.on{background:var(--pink);border-color:var(--pink2);transform:scale(1.04)}
+  input[type=range]{width:100%;accent-color:#ff7eb6}
+  .rangeval{text-align:center;font-size:1.05rem;margin-top:2px}
+
+  .cta-wrap{text-align:center;margin-top:34px}
+  .cta{
+    border:4px solid #fff;cursor:pointer;font:inherit;font-size:clamp(1.1rem,4.5vw,1.5rem);
+    padding:20px 28px;border-radius:999px;color:#fff;text-shadow:0 2px 0 #0002;
+    background:linear-gradient(90deg,#ff7eb6,#a78bfa,#38bdf8);background-size:200% 100%;
+    box-shadow:0 10px 0 #7a6aa655,0 18px 30px #7a6aa633;
+    animation:pulse 1.6s ease-in-out infinite, slide 4s linear infinite;
+    transition:transform .1s, box-shadow .1s;
+  }
+  .cta:active{transform:translateY(8px);box-shadow:0 2px 0 #7a6aa655}
+  @keyframes pulse{50%{transform:scale(1.05)}}
+  @keyframes slide{to{background-position:200% 0}}
+  .fine{margin-top:22px;font-size:.75rem;opacity:.65;text-align:center}
+
+  /* ===== VIBES OVERLAY ===== */
+  #vibes{
+    position:fixed;inset:0;z-index:50;display:none;overflow:hidden;cursor:pointer;
+    background:radial-gradient(circle at 30% 20%,#ffd6e8,transparent 50%),
+               radial-gradient(circle at 80% 80%,#c9e4ff,transparent 50%),
+               radial-gradient(circle at 20% 85%,#d4ffe0,transparent 45%),
+               #fff1fb;
+    animation:fadein .35s ease;
+  }
+  #vibes.show{display:grid;place-items:center}
+  @keyframes fadein{from{opacity:0;transform:scale(1.1)}to{opacity:1;transform:none}}
+  .rings{position:absolute;width:150vmin;height:150vmin;border-radius:50%;
+    background:conic-gradient(from 0deg,#ffc8dd55,#bde0fe55,#c7f9cc55,#fff1b855,#cdb4db55,#ffc8dd55);
+    animation:spin 14s linear infinite;filter:blur(10px)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .center{position:relative;text-align:center;padding:20px}
+  .vibes-word{display:flex;justify-content:center;font-size:clamp(3.5rem,19vw,9rem);font-weight:900;letter-spacing:-.03em;line-height:1}
+  .vibes-word span{
+    display:inline-block;animation:wave 1.1s ease-in-out infinite;
+    background:linear-gradient(180deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent;
+    -webkit-text-stroke:3px #fff; paint-order:stroke fill;
+    filter:drop-shadow(0 6px 0 #ffffffcc);
+  }
+  @keyframes wave{0%,100%{transform:translateY(0) rotate(-4deg) scale(1)}50%{transform:translateY(-22px) rotate(5deg) scale(1.1)}}
+  .caption{margin-top:18px;font-size:clamp(1rem,4.5vw,1.6rem);min-height:2.4em;animation:pop .5s ease}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+  .tap{margin-top:10px;font-size:.8rem;opacity:.55}
+  .rain{position:absolute;top:-60px;font-size:var(--s);animation:fall var(--d) linear infinite;pointer-events:none}
+  @keyframes fall{to{transform:translateY(115vh) rotate(var(--r))}}
+  .sticker{
+    position:absolute;font-size:clamp(2.5rem,10vw,5rem);animation:bob 2s ease-in-out infinite;pointer-events:none
+  }
+  .confetti{position:absolute;width:10px;height:16px;top:-20px;animation:fall var(--d) linear infinite;border-radius:3px;pointer-events:none}
+  @media (prefers-reduced-motion:reduce){
+    body,.cta,.rings,.rain,.confetti{animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>How to Anaesthetise<span class="floaty">...</span></h1>
+    <p class="sub">🩺 a totally serious clinical tool 🩺<br>(fill in everything. leave nothing out. the vibes need data)</p>
+  </header>
+
+  <div class="progress"><span id="plabel">0/0</span><div class="bar"><i id="pbar"></i></div><span id="pemoji">😴</span></div>
+
+  <form id="form" onsubmit="return false"></form>
+
+  <div class="cta-wrap">
+    <button class="cta" id="go" type="button">How do I anaesthetise this patient?</button>
+    <p class="fine">⚠️ This is a joke. Not medical advice. Please do not anaesthetise anyone based on vibes. Use actual drugs, actual monitoring and an actual senior. ⚠️</p>
+  </div>
+</div>
+
+<div id="vibes" aria-live="polite" role="dialog" aria-label="Vibes">
+  <div class="rings"></div>
+  <div class="center">
+    <div class="vibes-word" id="word"></div>
+    <div class="caption" id="caption"></div>
+    <div class="tap">(tap anywhere to go back to reality)</div>
+  </div>
+</div>
+
+<script>
+const steps = [
+  {t:"Patient details", e:"🧍", c:"var(--pink)", h:"Who even is this person",
+   html:`<div class="row">
+     <div><label>Age</label><input type="number" min="0" max="120" placeholder="e.g. 54" data-k="age"></div>
+     <div><label>Gender</label><select data-k="gender"><option value="">Pick one</option><option>Female</option><option>Male</option><option>Non-binary</option><option>Prefer not to say</option><option>Vibes-based</option></select></div>
+     <div><label>Height (cm)</label><input type="number" min="30" max="260" placeholder="e.g. 170" data-k="height"></div>
+     <div><label>Weight (kg)</label><input type="number" min="1" max="400" placeholder="e.g. 72" data-k="weight"></div>
+   </div>`},
+  {t:"Operation speciality", e:"🔪", c:"var(--blue)", h:"Which surgeon is going to be grumpy at us",
+   html:`<select data-k="spec"><option value="">Choose a speciality</option>
+     <option>General surgery</option><option>Orthopaedics</option><option>Obstetrics &amp; Gynaecology</option><option>ENT</option><option>Urology</option><option>Vascular</option><option>Plastics</option><option>Neurosurgery</option><option>Cardiothoracic</option><option>Ophthalmology</option><option>Dental</option><option>Paediatrics</option><option>"Just a quick one"</option></select>`},
+  {t:"The operation", e:"📋", c:"var(--mint)", h:"What are we doing to them exactly",
+   html:`<input type="text" placeholder="e.g. Lap chole, hip replacement, 'something with the gallbladder'" data-k="op">`},
+  {t:"Operation length", e:"⏱️", c:"var(--butter)", h:"Surgeon's estimate: ×2 for reality",
+   html:`<input type="range" min="0" max="5" value="1" id="len" data-k="len"><div class="rangeval" id="lenval"></div>`},
+  {t:"Medical history", e:"🫀", c:"var(--lilac)", h:"Tap everything that applies",
+   chips:["Hypertension","Diabetes","Asthma","COPD","Heart disease","Reflux","Sleep apnoea","Epilepsy","Kidney issues","Thyroid","Anxious about needles","Perfectly healthy (suspicious)"],
+   extra:"Anything else?"},
+  {t:"Drug history", e:"💊", c:"var(--peach)", h:"Include the supplements their cousin recommended",
+   chips:["Blood thinners","Beta blockers","ACE inhibitors","Metformin","Insulin","Inhalers","Antidepressants","Painkillers","Herbal tea (lots)","Creatine","Ibuprofen like sweets"],
+   extra:"Other meds"},
+  {t:"Allergies", e:"🤧", c:"var(--pink2)", h:"Yes, 'tomatoes' counts. We will discuss it.",
+   chips:["Penicillin","Latex","Egg","Nuts","Iodine","Chlorhexidine","Hay fever","Cats","Mondays","NKDA"],
+   extra:"Reaction type / other"},
+  {t:"Family history", e:"👪", c:"var(--blue2)", h:"Genes: the original plot twist",
+   chips:["Malignant hyperthermia","Pseudocholinesterase deficiency","Bad PONV","Heart disease","Cancer","Clotting problems","Uncle woke up mid-surgery","Nobody knows (adopted/estranged)"],
+   extra:"Other"},
+  {t:"Social history", e:"🍻", c:"var(--mint)", h:"No judgement. Some judgement.",
+   chips:["Smoker","Vaper","Drinks socially","Drinks 'socially'","Recreational drugs","Lives alone","Has a dog","Gym bro / gym gal","Marathon runner","Competitive napper"],
+   extra:"Occupation / anything spicy"},
+  {t:"Bonus: the important stuff", e:"✨", c:"var(--pink)", h:"Things the pre-op form forgot to ask",
+   html:`<div class="row">
+     <div><label>Last meal</label><select data-k="meal"><option value="">...</option><option>6+ hours ago</option><option>Toast this morning</option><option>Full roast, 20 min ago</option><option>"Just a coffee" (8 sugars)</option></select></div>
+     <div><label>Mallampati</label><select data-k="mal"><option value="">...</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>Refused to open mouth</option></select></div>
+     <div><label>ASA grade</label><select data-k="asa"><option value="">...</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option><option>Vibes</option></select></div>
+     <div><label>Star sign</label><select data-k="star"><option value="">...</option><option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option><option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option><option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option></select></div>
+   </div>
+   <label style="margin-top:12px">Surgeon mood</label>
+   <div class="chips" data-chips="mood">
+     <span class="chip">😊 Cheerful</span><span class="chip">😤 Already cross</span><span class="chip">☕ Hasn't had coffee</span><span class="chip">🎵 Has opinions on the playlist</span></div>
+   <label style="margin-top:12px">Anaesthetist caffeine level</label>
+   <div class="chips" data-chips="caf"><span class="chip">🫖 Fine</span><span class="chip">☕ Two cups</span><span class="chip">⚡ Beyond measure</span><span class="chip">💀 Running on fumes</span></div>
+   <label style="margin-top:12px">Do they say "I'm fine" a lot?</label>
+   <div class="chips" data-chips="fine"><span class="chip">Yes</span><span class="chip">No</span><span class="chip">They are not fine</span></div>`}
+];
+
+const lens=["15 minutes ('quick one')","1 hour","2 hours","4 hours","8 hours (bring snacks)","Until the heat death of the universe"];
+const form=document.getElementById('form');
+
+steps.forEach((s,i)=>{
+  const d=document.createElement('section');
+  d.className='card'; d.style.setProperty('--c',s.c); d.dataset.step=i;
+  let inner=`<h2><span class="num">${i+1}</span>${s.e} ${s.t}</h2><p class="hint">${s.h}</p>`;
+  if(s.html) inner+=s.html;
+  if(s.chips){
+    inner+=`<div class="chips" data-chips="c${i}">${s.chips.map(c=>`<span class="chip">${c}</span>`).join('')}</div>
+    <div style="margin-top:12px"><label>${s.extra}</label><input type="text" data-k="x${i}" placeholder="Type here..."></div>`;
+  }
+  d.innerHTML=inner; form.appendChild(d);
+});
+
+// chips toggle
+form.addEventListener('click',e=>{
+  const ch=e.target.closest('.chip'); if(!ch) return;
+  const group=ch.parentElement;
+  if(['mood','caf','fine'].includes(group.dataset.chips)){
+    group.querySelectorAll('.chip').forEach(x=>x!==ch&&x.classList.remove('on'));
+  }
+  ch.classList.toggle('on'); update();
+});
+form.addEventListener('input',update);
+form.addEventListener('change',update);
+
+const len=document.getElementById('len'), lenval=document.getElementById('lenval');
+function setLen(){lenval.textContent=lens[len.value]}
+len.addEventListener('input',()=>{setLen();len.dataset.touched=1;update()}); setLen();
+
+const cards=[...document.querySelectorAll('.card')];
+const emojis=["😴","🥱","🙂","😎","🤩","🥳"];
+function filled(c){
+  if(c.querySelector('.chip.on')) return true;
+  return [...c.querySelectorAll('input[type=text],input[type=number],select,textarea')].some(i=>i.value.trim()) ||
+         (c.querySelector('#len') && c.querySelector('#len').dataset.touched);
+}
+function update(){
+  let n=0; cards.forEach(c=>{const f=filled(c);c.classList.toggle('done',f);if(f)n++});
+  document.getElementById('plabel').textContent=n+"/"+cards.length;
+  document.getElementById('pbar').style.width=(n/cards.length*100)+"%";
+  document.getElementById('pemoji').textContent=emojis[Math.min(5,Math.floor(n/cards.length*5.99))];
+}
+update();
+
+// ===== vibes =====
+const vibes=document.getElementById('vibes'), word=document.getElementById('word'), cap=document.getElementById('caption');
+const pal=[["#ff9ec7","#ffc8dd"],["#9ec9ff","#bde0fe"],["#9ff0b0","#c7f9cc"],["#ffe08a","#fff1b8"],["#c3a1e0","#cdb4db"]];
+"vibes".split('').forEach((ch,i)=>{
+  const s=document.createElement('span'); s.textContent=ch;
+  s.style.setProperty('--a',pal[i%5][0]); s.style.setProperty('--b',pal[(i+1)%5][1]);
+  s.style.animationDelay=(i*.12)+"s"; word.appendChild(s);
+});
+const caps=["✨ just vibes ✨","no thoughts, head empty 🧠💨","it's giving propofol 💅","the monitors are simply a suggestion 📈","trust the process (and the senior) 🫶","bestie the patient is asleep. periodt. 😴","this is fine 🔥🐶","sending good MAC to your airway 🌬️","slay the induction 💉✨","stay hydrated 💧 (the patient is nil by mouth tho)"];
+const rainSet=["✨","💖","💤","🌈","☁️","🦄","💉","🫧","🍑","🧸","⭐","🌸","😴","🐸","🍡"];
+let timer;
+function spawn(){
+  document.querySelectorAll('.rain,.confetti,.sticker').forEach(n=>n.remove());
+  for(let i=0;i<36;i++){
+    const r=document.createElement('div'); r.className='rain'; r.textContent=rainSet[i%rainSet.length];
+    r.style.left=Math.random()*100+'vw'; r.style.setProperty('--s',(18+Math.random()*34)+'px');
+    r.style.setProperty('--d',(4+Math.random()*5)+'s'); r.style.setProperty('--r',(Math.random()*720-360)+'deg');
+    r.style.animationDelay=(-Math.random()*8)+'s'; vibes.appendChild(r);
+  }
+  const cols=["#ffafcc","#a2d2ff","#c7f9cc","#fff1b8","#cdb4db","#ffd6a5"];
+  for(let i=0;i<40;i++){
+    const c=document.createElement('div'); c.className='confetti'; c.style.background=cols[i%6];
+    c.style.left=Math.random()*100+'vw'; c.style.setProperty('--d',(3+Math.random()*4)+'s'); c.style.setProperty('--r',(Math.random()*900)+'deg');
+    c.style.animationDelay=(-Math.random()*6)+'s'; vibes.appendChild(c);
+  }
+  [["😎","6%","10%"],["🛌","80%","12%"],["💅","8%","78%"],["🧿","82%","75%"]].forEach(([e,l,t],i)=>{
+    const s=document.createElement('div'); s.className='sticker'; s.textContent=e; s.style.left=l; s.style.top=t; s.style.animationDelay=(i*.4)+'s'; vibes.appendChild(s);
+  });
+}
+function nextCap(){cap.style.animation='none';void cap.offsetWidth;cap.style.animation='';cap.textContent=caps[Math.floor(Math.random()*caps.length)]}
+function open(){spawn();nextCap();vibes.classList.add('show');timer=setInterval(nextCap,2200)}
+function close(){vibes.classList.remove('show');clearInterval(timer)}
+document.getElementById('go').addEventListener('click',open);
+vibes.addEventListener('click',close);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+</script>
+</body>
+</html>
