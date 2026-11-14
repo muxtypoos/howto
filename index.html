@@ -112,6 +112,9 @@
   @keyframes wave{0%,100%{transform:translateY(0) rotate(-4deg) scale(1)}50%{transform:translateY(-22px) rotate(5deg) scale(1.1)}}
   .caption{margin-top:18px;font-size:clamp(1rem,4.5vw,1.6rem);min-height:2.4em;animation:pop .5s ease}
   @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+  .summary{margin-top:6px;font-size:.85rem;opacity:.7;background:#ffffffaa;display:inline-block;padding:4px 14px;border-radius:99px}
+  .summary:empty{display:none}
+  .caption{max-width:560px;margin-left:auto;margin-right:auto}
   .tap{margin-top:10px;font-size:.8rem;opacity:.55}
   .rain{position:absolute;top:-60px;font-size:var(--s);animation:fall var(--d) linear infinite;pointer-events:none}
   @keyframes fall{to{transform:translateY(115vh) rotate(var(--r))}}
@@ -128,7 +131,7 @@
 <div class="wrap">
   <header>
     <h1>How to Anaesthetise<span class="floaty">...</span></h1>
-    <p class="sub">🩺 a totally serious clinical tool 🩺<br>(fill in everything. leave nothing out. the vibes need data)</p>
+    <p class="sub">🩺 a totally serious clinical tool 🩺<br>(fill in everything. leave nothing out. the algorithm is hungry)</p>
   </header>
 
   <div class="progress"><span id="plabel">0/0</span><div class="bar"><i id="pbar"></i></div><span id="pemoji">😴</span></div>
@@ -137,7 +140,7 @@
 
   <div class="cta-wrap">
     <button class="cta" id="go" type="button">How do I anaesthetise this patient?</button>
-    <p class="fine">⚠️ This is a joke. Not medical advice. Please do not anaesthetise anyone based on vibes. Use actual drugs, actual monitoring and an actual senior. ⚠️</p>
+    <p class="fine">⚠️ This is a joke. Not medical advice. Please do not anaesthetise anyone based on this page. Use actual drugs, actual monitoring and an actual senior. ⚠️</p>
   </div>
 </div>
 
@@ -145,6 +148,7 @@
   <div class="rings"></div>
   <div class="center">
     <div class="vibes-word" id="word"></div>
+    <div class="summary" id="summary"></div>
     <div class="caption" id="caption"></div>
     <div class="tap">(tap anywhere to go back to reality)</div>
   </div>
@@ -155,7 +159,7 @@ const steps = [
   {t:"Patient details", e:"🧍", c:"var(--pink)", h:"Who even is this person",
    html:`<div class="row">
      <div><label>Age</label><input type="number" min="0" max="120" placeholder="e.g. 54" data-k="age"></div>
-     <div><label>Gender</label><select data-k="gender"><option value="">Pick one</option><option>Female</option><option>Male</option><option>Non-binary</option><option>Prefer not to say</option><option>Vibes-based</option></select></div>
+     <div><label>Gender</label><select data-k="gender"><option value="">Pick one</option><option>Female</option><option>Male</option><option>Non-binary</option><option>Prefer not to say</option><option>Mysterious</option></select></div>
      <div><label>Height (cm)</label><input type="number" min="30" max="260" placeholder="e.g. 170" data-k="height"></div>
      <div><label>Weight (kg)</label><input type="number" min="1" max="400" placeholder="e.g. 72" data-k="weight"></div>
    </div>`},
@@ -185,7 +189,7 @@ const steps = [
    html:`<div class="row">
      <div><label>Last meal</label><select data-k="meal"><option value="">...</option><option>6+ hours ago</option><option>Toast this morning</option><option>Full roast, 20 min ago</option><option>"Just a coffee" (8 sugars)</option></select></div>
      <div><label>Mallampati</label><select data-k="mal"><option value="">...</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>Refused to open mouth</option></select></div>
-     <div><label>ASA grade</label><select data-k="asa"><option value="">...</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option><option>Vibes</option></select></div>
+     <div><label>ASA grade</label><select data-k="asa"><option value="">...</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option><option>Whatever</option></select></div>
      <div><label>Star sign</label><select data-k="star"><option value="">...</option><option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option><option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option><option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option></select></div>
    </div>
    <label style="margin-top:12px">Surgeon mood</label>
@@ -251,7 +255,22 @@ const pal=[["#ff9ec7","#ffc8dd"],["#9ec9ff","#bde0fe"],["#9ff0b0","#c7f9cc"],["#
   s.style.setProperty('--a',pal[i%5][0]); s.style.setProperty('--b',pal[(i+1)%5][1]);
   s.style.animationDelay=(i*.12)+"s"; word.appendChild(s);
 });
-const caps=["✨ just vibes ✨","no thoughts, head empty 🧠💨","it's giving propofol 💅","the monitors are simply a suggestion 📈","trust the process (and the senior) 🫶","bestie the patient is asleep. periodt. 😴","this is fine 🔥🐶","sending good MAC to your airway 🌬️","slay the induction 💉✨","stay hydrated 💧 (the patient is nil by mouth tho)"];
+const caps=[
+"✨ just vibes ✨","no thoughts, head empty 🧠💨","it's giving propofol 💅","the monitors are simply a suggestion 📈",
+"trust the process (and the senior) 🫶","this is fine 🔥🐶","slay the induction 💉✨","stay hydrated 💧 (the patient is nil by mouth tho)",
+"have you tried turning the patient off and on again? 🔌","plot twist: the real anaesthetic was the friends we made along the way 🫂",
+"the ODP knows. the ODP always knows 👁️","somewhere, a surgeon is saying 'two minutes' ⏳","sir this is a theatre 🏥",
+"it's not a gas leak it's a lifestyle 💨","let's go gambling (responsibly, with a pulse oximeter) 🎰","manifesting a boring, uneventful list 🙏",
+"the ventilator is just a very expensive pair of lungs with commitment issues 🫁","remember: it's only a bad day until the bleep goes off 📟",
+"inhale confidence, exhale sevoflurane 🌬️","may your cannulas flash back first time 🍀","if in doubt, ask someone braver 🦸",
+"sleepy time but make it professional 😴💼","no one has ever regretted checking the checklist ✅","coffee level: critical ☕🚨",
+"the patient is calm. you are not. that's the job 🫠","this is your sign to double-check the drug label 🪧","ssh, the surgeon is thinking 🤫",
+"somebody put the kettle on, it's going to be one of those lists 🫖","gently, gently, like defusing a very sleepy bomb 💣😴","a moment of silence for the spilled tea ☕🕯️",
+"press F to pay respects to the pressure bag 🫡","girl dinner, but it's a bag of ringers 🍽️","built different. specifically, built with a laryngoscope 🔦",
+"that's a lot of tubes for one person 🧵","vibes are immaculate, sats are 100% 💯","just a little guy, doing his best 🥹","the patient's first question will be 'is it over?' 😮‍💨",
+"fun fact: nobody has ever finished a theatre biscuit tin 🍪","today's forecast: mostly stable with a chance of surgeon 🌦️","caution: contents may include an anaesthetist 📦",
+"respectfully, the arterial line has opinions 🩸","unlimited power (up to the limit of the alarms) 🔊","this one's going straight in the logbook 📓","no sudden movements. including yours. 🧘"
+];
 const rainSet=["✨","💖","💤","🌈","☁️","🦄","💉","🫧","🍑","🧸","⭐","🌸","😴","🐸","🍡"];
 let timer;
 function spawn(){
@@ -272,8 +291,150 @@ function spawn(){
     const s=document.createElement('div'); s.className='sticker'; s.textContent=e; s.style.left=l; s.style.top=t; s.style.animationDelay=(i*.4)+'s'; vibes.appendChild(s);
   });
 }
-function nextCap(){cap.style.animation='none';void cap.offsetWidth;cap.style.animation='';cap.textContent=caps[Math.floor(Math.random()*caps.length)]}
-function open(){spawn();nextCap();vibes.classList.add('show');timer=setInterval(nextCap,2200)}
+// ---- captions based on what was selected (subtle, never repeats the option) ----
+const specCaps={
+ "General surgery":"bowels do what bowels do. keep the antiemetics close 🌀",
+ "Orthopaedics":"bring earplugs for the saw soundtrack 🎧",
+ "Obstetrics & Gynaecology":"two for the price of one. keep an eye on both 👀",
+ "ENT":"share the airway nicely. surgeons hate sharing ☺️",
+ "Urology":"fluids in, fluids out, don't get splashed 🚿",
+ "Vascular":"two big cannulas and a good relationship with the blood bank 🩸",
+ "Plastics":"long case, comfy position, warm patient 🛋️",
+ "Neurosurgery":"smooth emergence or nobody gets a biscuit 🍪",
+ "Cardiothoracic":"deep breath. it's going to be a big one 🫡",
+ "Ophthalmology":"absolutely no coughing. none. zero. 🙏",
+ "Dental":"pack the throat, share the mouth, stay friendly 🦷",
+ "Paediatrics":"parents will want a lot of reassurance. so will you 🧸",
+ "\"Just a quick one\"":"'quick' is a bit of a myth, isn't it 🦄"
+};
+const opCaps=["someone in the corridor has already said the word 'just' 🚩","there's a plan. there's also a plan B. and a plan C 📋","mentally rehearse the worst case, then relax 🧘","check the consent form says what you think it says 🔍"];
+const lenCaps=[
+ "back for lunch, if everything is kind to us 🥪",
+ "enough time for a cuppa. barely ☕",
+ "get the warmer on and check the pressure points 🔥",
+ "go and wee now. seriously. 🚽",
+ "tag in a relief. the snack drawer is your friend 🍫",
+ "bring a book. possibly a sleeping bag 📚"
+];
+const chipCaps={
+ "Hypertension":"keep the pressure honest. no rollercoasters 🎢",
+ "Diabetes":"sweet little glucose check, then hourly 🍭",
+ "Asthma":"bronchodilator in your back pocket, just in case 🎒",
+ "COPD":"lungs with a story to tell. treat them gently 📖",
+ "Heart disease":"boring rhythm = good rhythm 🥁",
+ "Reflux":"fast, sharp and a bit of pressure on the neck. you know the drill 🚀",
+ "Sleep apnoea":"recovery is where this one gets interesting 👀",
+ "Epilepsy":"meds on time, no sneaky triggers ⏰",
+ "Kidney issues":"pick friends that won't hurt the kidneys 🫘",
+ "Thyroid":"keep the pace steady, nothing dramatic 🦋",
+ "Anxious about needles":"gas first. cannula when they're floating ☁️",
+ "Perfectly healthy (suspicious)":"there's always something. there's always something 🕵️",
+ "Blood thinners":"peek at the clotting before anyone goes near the spine 👀",
+ "Beta blockers":"heart rate is on a chill pill. don't chase it 🐢",
+ "ACE inhibitors":"pressure may dip. phenylephrine says hi 📉",
+ "Metformin":"check the kidneys and when the last dose was ⌚",
+ "Insulin":"glucose chart goes on the wall 📈",
+ "Inhalers":"ask where the blue one lives 🔍",
+ "Antidepressants":"mind the combos, keep the mood steady 🌻",
+ "Painkillers":"regular users need a bigger plan 💊",
+ "Herbal tea (lots)":"ask about the tea. there's always more than tea 🍵",
+ "Creatine":"protein shakes and strong opinions 💪",
+ "Ibuprofen like sweets":"stomach and kidneys would like a word 🙋",
+ "Penicillin":"have a look at what 'allergy' really meant 🧐",
+ "Latex":"sort the glove drawer before they arrive 🧤",
+ "Egg":"propofol is actually fine. myth busted 📢",
+ "Nuts":"snacks stay outside, thank you 🥜",
+ "Iodine":"check the prep trolley before you open anything 🧴",
+ "Chlorhexidine":"the skin prep needs a rethink 🧽",
+ "Hay fever":"tissues for the recovery nurse 🤧",
+ "Cats":"dander-free theatre. a miracle of modern engineering 🐈",
+ "Mondays":"the one thing we can't cure 🗓️",
+ "NKDA":"nice clean slate. enjoy it 🎨",
+ "Malignant hyperthermia":"better do some TIVA 🚨",
+ "Pseudocholinesterase deficiency":"sux sits this one out 🙅",
+ "Bad PONV":"antiemetics: the more the merrier 🎉",
+ "Heart disease ":"",
+ "Cancer":"be kind. be thorough. 🎗️",
+ "Clotting problems":"check the numbers before reaching for a needle 🩹",
+ "Uncle woke up mid-surgery":"depth monitor, please. and a touch more vapour 📉",
+ "Nobody knows (adopted/estranged)":"genetic lottery! 🎰",
+ "Smoker":"chest will be chatty in recovery 🚬",
+ "Vaper":"airways might be a bit twitchy ☁️",
+ "Drinks socially":"average amount of average 🍷",
+ "Drinks 'socially'":"ask a second time, nicely 🍻",
+ "Recreational drugs":"honesty is the best premed 🤝",
+ "Lives alone":"who's driving them home? 🚗",
+ "Has a dog":"someone's going to be very happy later 🐕",
+ "Gym bro / gym gal":"big veins, big requests 🏋️",
+ "Marathon runner":"heart rate of a sleeping sloth. don't panic 🦥",
+ "Competitive napper":"induction? they've been training for years 🥇"
+};
+const extraCaps=["ooh. that's going in the notes 📝","interesting. very interesting. 🔮","now THAT is worth a second look 🔎"];
+const miscCaps={
+ meal:{"6+ hours ago":"fasted like a champion 🏆","Toast this morning":"ahh, the classic toast negotiation 🍞","Full roast, 20 min ago":"time for a rapid sequence. no debates 🍗","\"Just a coffee\" (8 sugars)":"'just a coffee' is doing a lot of work there ☕"},
+ mal:{"I":"easy peasy ✨","II":"perfectly nice mouth 👌","III":"warm up the video laryngoscope 📹","IV":"plan B is already in the room 🧰","Refused to open mouth":"can't intubate what they won't open 🤐"},
+ asa:{"I":"healthy as a pastel unicorn 🦄","II":"mild, manageable, maybe a cuppa ☕","III":"gentle hands, careful drugs ☁️","IV":"senior in the room, now 🧯","V":"call everyone you know 🚨","Whatever":"whatever indeed. the most evidence-based grade 🧿"},
+ star:{"Aries":"wants it done yesterday 🐏","Taurus":"stubborn veins, probably 🐂","Gemini":"two moods, two IV sites ♊","Cancer":"sensitive soul. be kind 🦀","Leo":"main character energy in the induction room 🦁","Virgo":"has read the whole consent form. twice 📑","Libra":"will want everything balanced ⚖️","Scorpio":"intense. will remember everything 🦂","Sagittarius":"already planning the next holiday 🏹","Capricorn":"stoic under pressure 🐐","Aquarius":"weird little dreams on emergence 💧","Pisces":"floaty by nature 🐟"}
+};
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function chipsOf(sel){return [...document.querySelectorAll('[data-chips="'+sel+'"] .chip.on')].map(c=>c.textContent.trim())}
+function val(k){const e=document.querySelector('[data-k="'+k+'"]');return e?e.value.trim():''}
+function buildCaps(){
+  const out=[];
+  const age=parseFloat(val('age')), w=parseFloat(val('weight')), h=parseFloat(val('height')), g=val('gender');
+  if(!isNaN(age)){
+    out.push(age<=2?"weigh them, then do the maths twice 🧮":
+      age<12?"hope you brought the bubblegum flavour 🫧":
+      age<18?"the phone stays in their hand until the very last second 📱":
+      age>=85?"gentle hands. slow and steady wins 🐢":
+      age>=65?"start low, go slow 🍵":
+      "prime real estate for an uneventful day ✨");
+  }
+  if(g==="Mysterious") out.push("plot twist incoming 🕵️");
+  else if(g==="Non-binary") out.push("name band, pronouns, consent: get all three right 🏳️‍🌈");
+  else if(g==="Female") out.push("double-check the pregnancy box is ticked 📝");
+  if(!isNaN(h)){ if(h>=190) out.push("check the bed is long enough 🛏️"); else if(h<=150) out.push("adjust the table, grab the step stool 🪜"); }
+  if(!isNaN(w)){
+    out.push(w>=130?"ramp them up and get the slide sheet. big day 🏔️":
+      w>=100?"ideal vs actual weight: choose your fighter 🥊":
+      w<=10?"syringe pumps are going to earn their keep 💉":
+      w<=45?"tiny margins. check every dose 🪶":
+      "textbook territory 📚");
+    if(!isNaN(h)&&h>0){const bmi=w/Math.pow(h/100,2); if(bmi>=35) out.push("airway plans A through D, laid out like a buffet 🍽️"); else if(bmi<18.5) out.push("padding. so much padding 🧸");}
+  }
+  const spec=val('spec'); if(spec) out.push(specCaps[spec]||"settle in 🛋️");
+  if(val('op')) out.push(pick(opCaps));
+  const lv=document.getElementById('len'); if(lv&&lv.dataset.touched) out.push(lenCaps[lv.value]);
+  chipsOf("c4").concat(chipsOf("c5"),chipsOf("c6"),chipsOf("c7"),chipsOf("c8")).forEach(c=>{const t=chipCaps[c]; out.push(t||"noted. adjusting the plan 🎚️");});
+  steps.forEach((s,i)=>{ if(s.extra && val('x'+i)) out.push(pick(extraCaps)); });
+  ['meal','mal','asa','star'].forEach(k=>{const v=val(k); if(v&&miscCaps[k][v]) out.push(miscCaps[k][v]);});
+  chipsOf('mood').forEach(m=>{
+    if(m.includes("Cheerful")) out.push("enjoy it. it's rare 🦄");
+    else if(m.includes("cross")) out.push("keep your voice soft and your hands steady 🧘");
+    else if(m.includes("coffee")) out.push("stay out of the way for a few minutes 🫣");
+    else out.push("do NOT engage in the music debate 🎵");});
+  chipsOf('caf').forEach(m=>{
+    if(m.includes("Fine")) out.push("steady as a rock ☕");
+    else if(m.includes("Two")) out.push("alert and delightful 👀");
+    else if(m.includes("Beyond")) out.push("you can hear colours ⚡");
+    else out.push("read every label twice 🫠"); });
+  chipsOf('fine').forEach(m=>{
+    out.push(m==="Yes"?"reassurance, then more reassurance 🫂":m==="No"?"refreshing honesty 🌿":"gentle voice, extra blanket 💗");});
+  const extras=caps.slice().sort(()=>Math.random()-.5).slice(0,out.length?Math.max(4,Math.ceil(out.length/2)):caps.length);
+  return {caps: out.concat(extras), summary:""};
+}
+let queue=[], order=0;
+function nextCap(){
+  if(order>=queue.length){queue=queue.slice().sort(()=>Math.random()-.5); order=0;}
+  cap.style.animation='none';void cap.offsetWidth;cap.style.animation='';
+  cap.textContent=queue[order++];
+}
+function open(){
+  const r=buildCaps(); queue=r.caps.slice(); order=0;
+  document.getElementById('summary').textContent=r.summary;
+  spawn(); queue=queue.sort(()=>Math.random()-.5); nextCap();
+  vibes.classList.add('show'); clearInterval(timer); timer=setInterval(nextCap,2800);
+}
 function close(){vibes.classList.remove('show');clearInterval(timer)}
 document.getElementById('go').addEventListener('click',open);
 vibes.addEventListener('click',close);
